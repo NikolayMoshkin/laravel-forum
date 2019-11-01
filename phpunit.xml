@@ -24,6 +24,10 @@
     </filter>
     <php>
         <server name="APP_ENV" value="testing"/>
+<!--        //меняем БД во время тестов на sqlite-->
+        <server name="DB_CONNECTION" value="sqlite"/>
+<!--        //БД будет храниться в памяти-->
+        <server name="DB_DATABASE" value=":memory:"/>
         <server name="BCRYPT_ROUNDS" value="4"/>
         <server name="CACHE_DRIVER" value="array"/>
         <server name="MAIL_DRIVER" value="array"/>

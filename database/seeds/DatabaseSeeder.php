@@ -11,6 +11,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call(UsersTableSeeder::class);
+       $threats = factory(App\Thread::class, 50)->create();
+       $threats->each(function($threat){
+           factory(\App\Reply::class, 10)->create(['threat_id'=>$threat->id]);
+       });
     }
 }
