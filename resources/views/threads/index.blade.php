@@ -8,7 +8,7 @@
                     <div class="card-header">Форум</div>
                     <div class="card-body">
                         @foreach($threads as $thread)
-                            <a href="/threads/{{$thread->id}}">{{$thread->title}}</a>
+                            <a href={{$thread->path()}}>{{$thread->title}}</a>
                             <div>  {{$thread->body}}</div>
                             <hr>
                         @endforeach

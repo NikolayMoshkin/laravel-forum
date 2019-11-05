@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Channel;
 use App\Thread;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -20,7 +21,7 @@ class ThreadsController extends Controller
         return view('threads.index', compact('threads'));
     }
 
-    public function show(Thread $thread)
+    public function show($channel_id, Thread $thread)
     {
         Carbon::setLocale('ru');  //изменить язык пакета Carbon
         return view('threads.show', compact('thread'));
@@ -28,6 +29,12 @@ class ThreadsController extends Controller
 
     public function store(Request $request)
     {
+        $this->validate($request, [
+            'title' => 'required|min:2',
+            'body'  => 'required|min:2',
+            'channel_id' => 'required|exists:channels,id',
+        ]);
+
         $thread = Thread::create([
             'title' => $request->title,
             'channel_id' =>$request->channel_id,

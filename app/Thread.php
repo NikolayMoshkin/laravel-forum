@@ -21,6 +21,11 @@ class Thread extends Model
     }
     public function channel()
     {
-        $this->belongsTo(Channel::class);
+        return $this->belongsTo(Channel::class);
+    }
+
+    public function path()
+    {
+        return "/threads/".$this->channel->slug."/".$this->id;
     }
 }
