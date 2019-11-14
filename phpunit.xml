@@ -26,7 +26,7 @@
         <server name="APP_ENV" value="testing"/>
 <!--        //меняем БД во время тестов на sqlite-->
         <server name="DB_CONNECTION" value="sqlite"/>
-<!--        //БД будет храниться в памяти-->
+<!--        //БД будет храниться в памяти: используем value = ":memory:" -->
         <server name="DB_DATABASE" value=":memory:"/>
         <server name="BCRYPT_ROUNDS" value="4"/>
         <server name="CACHE_DRIVER" value="array"/>

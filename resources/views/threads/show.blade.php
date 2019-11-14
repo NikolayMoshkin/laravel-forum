@@ -2,47 +2,65 @@
 
 @section('content')
     <div class="container">
-        <div class="row justify-content-center">
+        <div class="row">
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-header">
-                        <a href="#">{{$thread->owner->name}}</a> написал:
-                        {{$thread->title}}</div>
+                        <div class="row">
+                            <div class="col-md-8"><strong>{{$thread->title}}</strong></div>
+                            @can('delete', $thread)
+                                <div class="col-md-4 text-right">
+                                    <a href="#">
+                                        <i class="fa fa-trash text-danger" aria-hidden="true" data-thread-id='{{$thread->id}}' id="deleteThread"></i>
+                                    </a>
+                                </div>
+                            @endcan
+                        </div>
+                    </div>
                     <div class="card-body">
                         {{$thread->body}}
                     </div>
                 </div>
-            </div>
-        </div>
-        <hr>
-        @if(auth()->check())
-            <div class="row justify-content-center">
-                <div class="col-md-8">
-                    <form action="/threads/{{$thread->id}}/replies" method="POST">
-                        @csrf
-                        <div class="form-group">
-                            <input class="form-control" type="text" id="body" name="body" placeholder="Есть что ответить?" required>
-                        </div>
-                        <div class="form-group">
-                            <input type="submit" class="btn btn-outline-secondary">
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <hr>
-        @else
-            <div class="row justify-content-center">
-                <p><a href="/login">Войдите</a>, чтобы оставить комментарий.</p>
-            </div>
-        @endif
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <h5>Ответы:</h5>
-                @foreach($thread->replies as $reply)
+                @if(count($thread->replies))
+                    <hr>
+                    <h5>Комментарии:</h5>
+                @endif
+                @foreach($replies as $reply)
                     @include('threads.reply')
                 @endforeach
+                <div style="margin-top: 1em">
+                    {{$replies->links()}}
+                </div>
+
+                @if(auth()->check())
+                    <div style="margin-top: 1em">
+                        <form action="{{$thread->path()}}/replies" method="POST">
+                            @csrf
+                            <div class="form-group">
+                                <textarea class="form-control" name="body" id="body" cols="30" rows="4"
+                                          required placeholder="Есть что ответить?"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" class="btn btn-outline-secondary">
+                            </div>
+                        </form>
+                    </div>
+                @else
+                    <div style="margin-top: 1em">
+                        <p><a href="/login">Войдите</a>, чтобы оставить комментарий.</p>
+                    </div>
+                @endif
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <p>Пост был опубликован <a
+                                href="/profiles/{{$thread->owner->name}}">{{$thread->owner->name}}</a> {{$thread->created_at->diffForHumans()}}
+                            и на данный момент имеет {{$thread->replies_count}} комментариев.</p>
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
-
     </div>
 @endsection

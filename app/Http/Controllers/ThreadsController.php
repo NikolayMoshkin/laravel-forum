@@ -3,28 +3,44 @@
 namespace App\Http\Controllers;
 
 use App\Channel;
+
+use App\Favourite;
+use App\Filters\ThreadFilters;
+use App\Reply;
+use App\User;
 use App\Thread;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ThreadsController extends Controller
 {
+
     public function __construct()
     {
         $this->middleware('auth')->except('index', 'show');
     }
 
-    public function index()
+    public function index(Channel $channel, ThreadFilters $filters)
     {
-//        $threads = Thread::latest()->get();
-        $threads = Thread::latest()->get();
+        $threads = $this->getThreads($channel, $filters);
+
+        if(request()->wantsJson()){
+            return $threads;
+        }
+
         return view('threads.index', compact('threads'));
     }
 
     public function show($channel_id, Thread $thread)
     {
-        Carbon::setLocale('ru');  //изменить язык пакета Carbon
-        return view('threads.show', compact('thread'));
+//        $thread->load('replies.owner');
+//        return $thread->load('replies');
+//        return Thread::withCount('replies')->first();  //считает кол-во replies
+
+        $replies = $thread->replies()->paginate(5);
+
+        return view('threads.show', compact('thread', 'replies'));
     }
 
     public function store(Request $request)
@@ -42,11 +58,39 @@ class ThreadsController extends Controller
             'user_id'=>auth()->id(),
         ]);
 
-        return redirect('/threads/'.$thread->id);
+        return redirect($thread->path());
     }
 
     public function create()
     {
         return view('threads.create');
     }
+
+    public function destroy(Channel $channel, Thread $thread)
+    {
+        $this->authorize('delete', $thread);
+        $thread->delete();  //связанные replies удаляем через boot()
+
+        return response([], 204);
+    }
+
+    /**
+     * @param Channel $channel
+     * @param ThreadFilters $filters
+     * @return mixed
+     */
+    protected function getThreads(Channel $channel, ThreadFilters $filters)
+    {
+        $threads = Thread::latest()->filter($filters);
+
+//        dd($threads->toSql()); //показывает чистый sql запрос
+
+        if ($channel->exists) {
+            $threads->where('channel_id', $channel->id);
+        }
+
+        $threads = $threads->get();
+        return $threads;
+    }
+
 }

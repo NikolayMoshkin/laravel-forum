@@ -8,17 +8,49 @@ class Thread extends Model
 {
     protected $guarded = [];
 
-    public function replies(){
-        return $this->hasMany(Reply::class);
+    protected $with = ['owner' , 'channel'];  //аналог метода addGlobalScope
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('replyCount', function ($builder) {
+            $builder->withCount('replies');
+        });
+
+//        static::addGlobalScope('owner', function ($builder) {  //при использовании далее метода withoutGlobalScopes  - не будут загружаться GlobalScopes
+//            $builder->with('owner');
+//        });
+
+        static::deleting(function ($thread){
+            $thread->replies()->delete();
+        });
+
+        static::created(function ($thread){
+            Activity::create([
+                'user_id' => auth()->id(),
+                'type' => 'created_thread',
+                'subject_id' => $thread->id,
+                'subject_type' => 'App/Thread',
+            ]);
+        });
     }
 
-    public function owner(){
+    public function replies()
+    {
+        return $this->hasMany(Reply::class)->withCount('favourites');
+    }
+
+    public function owner()
+    {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function addReply($reply){
+    public function addReply($reply)
+    {
         $this->replies()->create($reply);
     }
+
     public function channel()
     {
         return $this->belongsTo(Channel::class);
@@ -26,6 +58,12 @@ class Thread extends Model
 
     public function path()
     {
-        return "/threads/".$this->channel->slug."/".$this->id;
+        return "/threads/" . $this->channel->slug . "/" . $this->id;
+    }
+
+    public function scopeFilter($query, $filters)
+    {
+        return $filters->apply($query);
+
     }
 }

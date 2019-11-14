@@ -12,22 +12,36 @@ class ParticipateInForumTest extends TestCase
 {
     use DatabaseMigrations;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->thread = factory(Thread::class)->create();
+    }
+
     /** @test */
     public function unauthenticated_user_may_not_add_replies()
     {
-        $thread = factory(Thread::class)->create();
+        $this->withoutExceptionHandling();
         $this->expectException('Illuminate\Auth\AuthenticationException');
-        $this->post($thread->path().'/replies', []);
+        $this->post($this->thread->path().'/replies', []);
     }
     /** @test */
     public function an_authenticated_user_can_participate_in_forum_threads()
     {
         $this->be(factory(User::class)->create());  //метод be() создает аутентифицированного пользователя (контракт)
-        $thread = factory(Thread::class)->create();
         $reply = factory(Reply::class)->make();
 
-        $this->post($thread->path().'/replies', $reply->toArray());  //отправляем post запрос с параметрами $reply
-        $this->get($thread->path())->assertSee($reply->body); //переходим по адресу и должны увидеть
+        $this->post($this->thread->path().'/replies', $reply->toArray());  //отправляем post запрос с параметрами $reply
+        $this->get($this->thread->path())->assertSee($reply->body); //переходим по адресу и должны увидеть
     }
 
+    /** @test */
+    public function a_reply_requires_a_body()
+    {
+        $this->actingAs(factory(User::class)->create());
+        $reply = factory(Reply::class)->make(['body'=>null]);
+        $this->post($this->thread->path().'/replies', $reply->toArray())
+            ->assertSessionHasErrors('body');
+    }
 }
