@@ -23,6 +23,8 @@ require('./bootstrap');
 
 Vue.component('flash', require('./components/Flash.vue').default);
 Vue.component('reply', require('./components/Reply.vue').default);
+Vue.component('thread', require('./components/Thread.vue').default);
+Vue.component('thread-info', require('./components/ThreadInfo.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -32,4 +34,7 @@ Vue.component('reply', require('./components/Reply.vue').default);
 
 const app = new Vue({
     el: '#app',
+    data:{
+        commentsCount: 0,
+    }
 });

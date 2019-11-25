@@ -9,7 +9,7 @@
                     @can('update', $reply)
                         <i class="mr-3 fa fa-pencil text-muted update-reply" aria-hidden="true" @click="editing=true"
                            data-reply-id='{{$reply->id}}'></i>
-                        <i class="mr-3 fa fa-trash text-muted delete-reply" aria-hidden="true"
+                        <i class="mr-3 fa fa-trash text-muted delete-reply" aria-hidden="true" @click="deleteReply"
                            data-reply-id='{{$reply->id}}'></i>
                     @endcan
                     <strong class="likes-count">{{$reply->favourites_count}}</strong>
@@ -30,7 +30,6 @@
 
             </div>
             <div v-else v-text="body">
-{{--                {{$reply->body}}--}}
             </div>
 
         </div>

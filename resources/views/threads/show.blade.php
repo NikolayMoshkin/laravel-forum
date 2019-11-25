@@ -4,23 +4,26 @@
     <div class="container">
         <div class="row">
             <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="row">
-                            <div class="col-md-8"><strong>{{$thread->title}}</strong></div>
-                            @can('delete', $thread)
-                                <div class="col-md-4 text-right">
-                                    <a href="#">
-                                        <i class="fa fa-trash text-danger" aria-hidden="true" data-thread-id='{{$thread->id}}' id="deleteThread"></i>
-                                    </a>
-                                </div>
-                            @endcan
+                <thread :attributes="{{$thread}}" inline-template>
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-md-8"><strong>{{$thread->title}}</strong></div>
+                                @can('delete', $thread)
+                                    <div class="col-md-4 text-right">
+                                        <a href="#">
+                                            <i class="fa fa-trash text-danger" @click="deleteThread" aria-hidden="true"
+                                               data-thread-id='{{$thread->id}}' id="deleteThread"></i>
+                                        </a>
+                                    </div>
+                                @endcan
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            {{$thread->body}}
                         </div>
                     </div>
-                    <div class="card-body">
-                        {{$thread->body}}
-                    </div>
-                </div>
+                </thread>
                 @if(count($thread->replies))
                     <hr>
                     <h5>Комментарии:</h5>
@@ -52,14 +55,16 @@
                 @endif
             </div>
             <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <p>Пост был опубликован <a
-                                href="/profiles/{{$thread->owner->name}}">{{$thread->owner->name}}</a> {{$thread->created_at->diffForHumans()}}
-                            и на данный момент имеет {{$thread->replies_count}} комментариев.</p>
-                        </p>
+                <thread-info :attributes = '{{$thread}}' inline-template>
+                    <div class="card">
+                        <div class="card-body">
+                            <p>Пост был опубликован <a
+                                    href="/profiles/{{$thread->owner->name}}">{{$thread->owner->name}}</a> {{$thread->created_at->diffForHumans()}}
+                                и на данный момент имеет <span v-text="repliesCount"></span> комментариев.</p>
+                            </p>
+                        </div>
                     </div>
-                </div>
+                </thread-info>
             </div>
         </div>
     </div>

@@ -17,7 +17,6 @@
         created() {
             if (this.message) this.flash(this.message);
             window.events.$on('flash', message => {
-                console.log('event fired: ' + message);
                 this.flash(message);
             });
         },

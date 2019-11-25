@@ -27,6 +27,19 @@
                         let thumbsUpElem  =  menu.querySelector('a');
                         thumbsUpElem.className = thumbsUpElem.className === 'grey' ? 'blue' : 'grey';
                     })
+            },
+            deleteReply(event){
+                let confirmDelete = confirm("Удалить ответ?");
+                if (confirmDelete) {
+                    let replyId = event.target.dataset.replyId;
+                    axios.delete('/replies/'+ replyId)
+                        .then(function (response) {
+                            console.log(response);
+                            let elem = document.querySelector('#reply-'+ replyId);
+                            elem.parentNode.removeChild(elem);
+                            window.reduceRepliesCounter();
+                        })
+                }
             }
         }
     }

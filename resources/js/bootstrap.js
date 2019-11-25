@@ -28,6 +28,9 @@ window.events =  new Vue();
 window.flash = function(message){
     window.events.$emit('flash', message)
 };
+window.reduceRepliesCounter = function(){
+    window.events.$emit('reduceRepliesCounter')
+};
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
