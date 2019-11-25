@@ -26,6 +26,20 @@ class RepliesController extends Controller
             'user_id' => auth()->id(),
         ]);
 
-        return redirect($thread->path());
+        return redirect($thread->path())->with('flash', 'Комментарий добавлен');
+    }
+    public function destroy(Reply $reply)
+    {
+        $this->authorize('update', $reply);
+        $reply->delete();
+
+        return response([], 204);
+    }
+
+    public function update(Request $request, Reply $reply)
+    {
+        $this->authorize('update', $reply);
+        $reply->update(['body' => $request->body]);
+        return response([], 200);
     }
 }

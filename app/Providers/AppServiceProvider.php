@@ -28,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        date_default_timezone_set('Europe/Moscow');
         Carbon::setLocale('ru');  //изменить язык пакета Carbon
 
         View::composer('*', function ($view) {    //передаем в любой вид ('*') переменную $channels

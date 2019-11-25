@@ -23,6 +23,7 @@ class ThreadsController extends Controller
 
     public function index(Channel $channel, ThreadFilters $filters)
     {
+
         $threads = $this->getThreads($channel, $filters);
 
         if(request()->wantsJson()){
@@ -34,11 +35,12 @@ class ThreadsController extends Controller
 
     public function show($channel_id, Thread $thread)
     {
+
 //        $thread->load('replies.owner');
 //        return $thread->load('replies');
 //        return Thread::withCount('replies')->first();  //считает кол-во replies
 
-        $replies = $thread->replies()->paginate(5);
+        $replies = $thread->replies()->paginate(15);
 
         return view('threads.show', compact('thread', 'replies'));
     }
@@ -58,7 +60,7 @@ class ThreadsController extends Controller
             'user_id'=>auth()->id(),
         ]);
 
-        return redirect($thread->path());
+        return redirect($thread->path())->with('flash', 'Заметка создана успешно!');
     }
 
     public function create()

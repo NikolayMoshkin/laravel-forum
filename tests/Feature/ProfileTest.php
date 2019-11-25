@@ -17,8 +17,10 @@ class ProfileTest extends TestCase
     public function a_user_has_a_profile()
     {
         $this->withOutExceptionHandling();
-
         $user = factory(User::class)->create();
+
+        $this->actingAs($user);
+
         $thread = factory(Thread::class)->create(['user_id' => $user->id]);
 
         $this->get('/profiles/' . $user->name)

@@ -8,23 +8,16 @@
                 <div>Всего постов: {{$user->threads_count}}</div>
             </div>
 
-            @foreach($threads as $thread)
-                <div class="card mb-3">
-                    <div class="card-header">
-                        <a href="{{$thread->path()}}">{{$thread->title}}</a>
-                        опубликован {{$thread->created_at->diffForHumans()}}
-                    </div>
-                    <div class="card-body">
-                        {{$thread->body}}
-                    </div>
-                </div>
-            @endforeach
-            {{$threads->links()}}
-        </div>
+            @foreach($activities as $date => $activityList)
+                <h5>Действия за {{$date}}:</h5>
+                @foreach($activityList as $activity)
+                    @if (view()->exists("profiles.activities.{$activity->type}"))
+                        @include("profiles.activities.{$activity->type}", ['activity' => $activity])
+                    @endif
+                @endforeach
 
-        @foreach($activities as $activity)
-            <div>{{$activity->type}}</div>
-        @endforeach
+            @endforeach
+        </div>
     </div>
 
 @endsection

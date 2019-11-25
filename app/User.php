@@ -59,6 +59,6 @@ class User extends Authenticatable
 
     public function activities()
     {
-        return $this->hasMany(Activity::class, ' user_id')->latest();
+        return $this->hasMany(Activity::class, 'user_id')->latest();
     }
 }

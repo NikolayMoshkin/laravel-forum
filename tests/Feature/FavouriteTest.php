@@ -2,10 +2,12 @@
 
 namespace Tests\Feature;
 
+use App\Activity;
 use App\Favourite;
 use App\User;
 use App\Reply;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class FavouriteTest extends TestCase
@@ -56,6 +58,9 @@ class FavouriteTest extends TestCase
 
         $this->post('/replies/' . $this->reply->id . '/favourites')
             ->assertSee(0);
+
+        $this->assertEquals(0, Activity::count());
+
 
     }
 }

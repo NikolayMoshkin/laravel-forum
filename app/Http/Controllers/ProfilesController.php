@@ -10,11 +10,10 @@ class ProfilesController extends Controller
 {
     public function show(User $user)
     {
-        $threads = $user->threads()->paginate(6);
-//        $activities = $user->activities()->paginate(10);
-        $activities = Activity::find(1);
-        dd($activities);
+        $activities = Activity::feed($user);
 
-        return view('profiles.show', compact('user', 'threads', 'activities'));
+//        dd($activities);
+        return view('profiles.show', compact('user', 'activities'));
     }
+
 }

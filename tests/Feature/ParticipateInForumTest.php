@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Favourite;
 use App\Reply;
 use App\Thread;
 use App\User;
@@ -43,5 +44,21 @@ class ParticipateInForumTest extends TestCase
         $reply = factory(Reply::class)->make(['body'=>null]);
         $this->post($this->thread->path().'/replies', $reply->toArray())
             ->assertSessionHasErrors('body');
+    }
+
+    /** @test */
+    public function an_authenticated_user_can_delete_his_replies()
+    {
+        $this->actingAs(factory(User::class)->create());
+        $reply = factory(Reply::class)->create(['user_id' => auth()->id()]);
+
+        $this->post('/replies/' . $reply->id . '/favourites');
+
+        $this->json('DELETE', '/replies/'.$reply->id)
+            ->assertStatus(204);
+
+        $this->assertEquals(0, Reply::count());
+        $this->assertEquals(0, Favourite::count());
+        $this->assertDatabaseMissing('activities', ['subject_type' => 'App\Favourite']);
     }
 }

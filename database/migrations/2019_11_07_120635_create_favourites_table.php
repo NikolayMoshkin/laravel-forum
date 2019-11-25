@@ -20,7 +20,7 @@ class CreateFavouritesTable extends Migration
             $table->unsignedBigInteger('favourited_id');
             $table->string('favourited_type', 50);
 
-            $table->unique(['user_id', 'favourited_id', 'favourited_type']);
+            $table->unique(['user_id', 'favourited_id', 'favourited_type']);  //уникальлная связка значений
         });
 
     }

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Activity;
 use App\Channel;
 use App\Favourite;
 use App\Reply;
@@ -82,14 +83,15 @@ class CreateThreadsTest extends TestCase
         $this->actingAs(factory(User::class)->create());
         $thread = factory(Thread::class)->create(['user_id' => auth()->id()]);
         $reply = factory(Reply::class)->create(['thread_id' => $thread->id]);
-        $reply->favourite();
 
         $this->json('DELETE', $thread->path())
             ->assertStatus(204);
 
         $this->assertDatabaseMissing('threads', ['id' => $thread->id]);
         $this->assertDatabaseMissing('replies', ['id' => $reply->id]);
-//        $this->assertDatabaseMissing('favourites', ['id' => $favourite_id->id]);
+
+        $this->assertEquals(0, Activity::count());
+
     }
 
 }

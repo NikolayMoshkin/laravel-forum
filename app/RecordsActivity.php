@@ -6,7 +6,7 @@ namespace App;
 
 trait RecordsActivity
 {
-    protected static function bootRecordsActivity()  //в трейт можно добавить статитческий метод bootTraitName и тогда этот метод добавиться в boot модели
+    protected static function bootRecordsActivity()  //в трейт можно добавить статитческий метод bootTraitName и тогда этот метод добавиться в boot вызвашей трейт модели
     {
         if(auth()->guest()) return;
 
@@ -16,11 +16,15 @@ trait RecordsActivity
                 $model->recordActivity($event);
             });
         }
+
+        static::deleting(function ($model) use ($event){
+            $model->activity()->delete();
+        });
     }
 
     protected static function getActivitiesToRecord()
     {
-        return ['created', 'deleted'];
+        return ['created'];
     }
 
     protected function recordActivity($event)

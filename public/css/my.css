@@ -1,7 +1,17 @@
-.mark-favourite .grey{
+.reply-menu .grey{
     color: grey;
 }
 
-.mark-favourite .blue{
+.reply-menu .blue{
     color: cornflowerblue;
+}
+
+.fa-trash:hover{
+    cursor: pointer;
+    color: #b70017 !important;
+}
+
+.fa-pencil:hover{
+    cursor: pointer;
+    color: cornflowerblue !important;
 }
