@@ -13,7 +13,6 @@
                     let url = window.location.pathname;
                     axios.delete(url)
                         .then(function (response) {
-                            console.log(response);
                             window.location.replace('/threads');
                         })
                 }

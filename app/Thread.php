@@ -32,7 +32,7 @@ class Thread extends Model
 
     public function replies()
     {
-        return $this->hasMany(Reply::class)->withCount('favourites');
+        return $this->hasMany(Reply::class)->withCount('favourites'); //сражу подгружаем счетчик favourites
     }
 
     public function owner()

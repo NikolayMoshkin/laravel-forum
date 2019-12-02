@@ -21,7 +21,7 @@ trait Favouritable
         return $this->morphMany(Favourite::class, 'favourited');
     }
 
-    public function favourite()
+    public function favouriteToggle()
     {
         $attributes = ['user_id' => auth()->id()];
         if(!$this->favourites()->where($attributes)->exists()) {

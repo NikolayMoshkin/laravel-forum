@@ -12,7 +12,7 @@
                                 @can('delete', $thread)
                                     <div class="col-md-4 text-right">
                                         <a href="#">
-                                            <i class="fa fa-trash text-danger" @click="deleteThread" aria-hidden="true"
+                                            <i class="fa fa-trash text-muted" @click="deleteThread" aria-hidden="true"
                                                data-thread-id='{{$thread->id}}' id="deleteThread"></i>
                                         </a>
                                     </div>

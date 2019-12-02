@@ -17,7 +17,6 @@
                 this.editing = false;
             },
             favourite(event){
-                console.log(event);
                 let likeElement = event.target;
                 let replyId = likeElement.dataset.replyId;
                 axios.post('/replies/' + replyId + '/favourites')
@@ -33,10 +32,10 @@
                 if (confirmDelete) {
                     let replyId = event.target.dataset.replyId;
                     axios.delete('/replies/'+ replyId)
-                        .then(function (response) {
-                            console.log(response);
+                        .then(function (response) {s
                             let elem = document.querySelector('#reply-'+ replyId);
                             elem.parentNode.removeChild(elem);
+                            flash('Комментарий удален');
                             window.reduceRepliesCounter();
                         })
                 }

@@ -1905,7 +1905,6 @@ __webpack_require__.r(__webpack_exports__);
       this.editing = false;
     },
     favourite: function favourite(event) {
-      console.log(event);
       var likeElement = event.target;
       var replyId = likeElement.dataset.replyId;
       axios.post('/replies/' + replyId + '/favourites').then(function (res) {
@@ -1921,9 +1920,10 @@ __webpack_require__.r(__webpack_exports__);
       if (confirmDelete) {
         var replyId = event.target.dataset.replyId;
         axios["delete"]('/replies/' + replyId).then(function (response) {
-          console.log(response);
+          s;
           var elem = document.querySelector('#reply-' + replyId);
           elem.parentNode.removeChild(elem);
+          flash('Комментарий удален');
           window.reduceRepliesCounter();
         });
       }
@@ -1954,7 +1954,6 @@ __webpack_require__.r(__webpack_exports__);
       if (confirmDelete) {
         var url = window.location.pathname;
         axios["delete"](url).then(function (response) {
-          console.log(response);
           window.location.replace('/threads');
         });
       }

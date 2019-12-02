@@ -33,13 +33,13 @@ class RepliesController extends Controller
         $this->authorize('update', $reply);
         $reply->delete();
 
-        return response([], 204);
+        return response(['Reply deleted'], 204);
     }
 
     public function update(Request $request, Reply $reply)
     {
         $this->authorize('update', $reply);
         $reply->update(['body' => $request->body]);
-        return response([], 200);
+        return response(['Reply updated'], 200);
     }
 }
