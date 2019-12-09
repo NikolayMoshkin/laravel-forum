@@ -32,7 +32,7 @@ class Thread extends Model
 
     public function replies()
     {
-        return $this->hasMany(Reply::class)->withCount('favourites'); //сражу подгружаем счетчик favourites
+        return $this->hasMany(Reply::class)->withCount('favourites'); //сразу подгружаем счетчик favourites
     }
 
     public function owner()
@@ -55,7 +55,7 @@ class Thread extends Model
         return "/threads/" . $this->channel->slug . "/" . $this->id;
     }
 
-    public function scopeFilter($query, $filters)
+    public function scopeFilter($query, $filters)  //добавив "scope" к названию метода, можно работать с builder'ом ($query)
     {
         return $filters->apply($query);
 

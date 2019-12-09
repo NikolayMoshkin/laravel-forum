@@ -1920,7 +1920,6 @@ __webpack_require__.r(__webpack_exports__);
       if (confirmDelete) {
         var replyId = event.target.dataset.replyId;
         axios["delete"]('/replies/' + replyId).then(function (response) {
-          s;
           var elem = document.querySelector('#reply-' + replyId);
           elem.parentNode.removeChild(elem);
           flash('Комментарий удален');

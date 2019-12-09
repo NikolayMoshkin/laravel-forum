@@ -32,7 +32,7 @@
                 if (confirmDelete) {
                     let replyId = event.target.dataset.replyId;
                     axios.delete('/replies/'+ replyId)
-                        .then(function (response) {s
+                        .then(function (response) {
                             let elem = document.querySelector('#reply-'+ replyId);
                             elem.parentNode.removeChild(elem);
                             flash('Комментарий удален');
