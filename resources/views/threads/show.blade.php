@@ -1,10 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8">
-                <thread :attributes="{{$thread}}" inline-template>
+    <thread-view :attributes="{{$thread}}" inline-template>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8">
+
                     <div class="card">
                         <div class="card-header">
                             <div class="row">
@@ -23,39 +24,38 @@
                             {{$thread->body}}
                         </div>
                     </div>
-                </thread>
-                @if(count($thread->replies))
-                    <hr>
-                    <h5>Комментарии:</h5>
-                @endif
-                @foreach($replies as $reply)
-                    @include('threads.reply')
-                @endforeach
-                <div style="margin-top: 1em">
-                    {{$replies->links()}}
-                </div>
+                    </thread>
+                    @if(count($thread->replies))
+                        <hr>
+                        <h5>Комментарии:</h5>
+                    @endif
 
-                @if(auth()->check())
+                    <replies :data="{{$thread->replies}}"></replies>
+
                     <div style="margin-top: 1em">
-                        <form action="{{$thread->path()}}/replies" method="POST">
-                            @csrf
-                            <div class="form-group">
+                        {{$replies->links()}}
+                    </div>
+
+                    @if(auth()->check())
+                        <div style="margin-top: 1em">
+                            <form action="{{$thread->path()}}/replies" method="POST">
+                                @csrf
+                                <div class="form-group">
                                 <textarea class="form-control" name="body" id="body" cols="30" rows="4"
                                           required placeholder="Есть что ответить?"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <input type="submit" class="btn btn-outline-secondary">
-                            </div>
-                        </form>
-                    </div>
-                @else
-                    <div style="margin-top: 1em">
-                        <p><a href="/login">Войдите</a>, чтобы оставить комментарий.</p>
-                    </div>
-                @endif
-            </div>
-            <div class="col-md-4">
-                <thread-info :attributes = '{{$thread}}' inline-template>
+                                </div>
+                                <div class="form-group">
+                                    <input type="submit" class="btn btn-outline-secondary">
+                                </div>
+                            </form>
+                        </div>
+                    @else
+                        <div style="margin-top: 1em">
+                            <p><a href="/login">Войдите</a>, чтобы оставить комментарий.</p>
+                        </div>
+                    @endif
+                </div>
+                <div class="col-md-4">
                     <div class="card">
                         <div class="card-body">
                             <p>Пост был опубликован <a
@@ -64,8 +64,8 @@
                             </p>
                         </div>
                     </div>
-                </thread-info>
+                </div>
             </div>
         </div>
-    </div>
+    </thread-view>
 @endsection
