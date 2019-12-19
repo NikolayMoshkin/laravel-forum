@@ -1,6 +1,10 @@
 <script>
+    import SubsButton from "./SubsButton.vue";
     export default {
         props:['attributes'],
+        components:{
+            SubsButton
+        },
         data(){
             return{
                 repliesCount: this.attributes.replies_count,

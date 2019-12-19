@@ -90,5 +90,16 @@ class ReadThreadsTest extends TestCase
         $this->assertEquals([3,2,0], array_column($response, 'replies_count'));
     }
 
+    /** @test */
+    public function a_user_can_filter_threads_by_unanswered_threads()
+    {
+        $this->withoutExceptionHandling();
+        $thread = factory(Thread::class)->create();
+        factory(Reply::class)->create(['thread_id' => $thread->id]);
+        $this->get('threads?unanswered=1')
+            ->assertSee($this->thread->title)
+            ->assertDontSee($thread->title);
+    }
+
 
 }

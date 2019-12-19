@@ -55,12 +55,15 @@
                 @endif
             </div>
             <div class="col-md-4">
-                <thread-info :attributes = '{{$thread}}' inline-template>
+                <thread-info :attributes='{{$thread}}' inline-template>
                     <div class="card">
                         <div class="card-body">
                             <p>Пост был опубликован <a
                                     href="/profiles/{{$thread->owner->name}}">{{$thread->owner->name}}</a> {{$thread->created_at->diffForHumans()}}
                                 и на данный момент имеет <span v-text="repliesCount"></span> комментариев.</p>
+                            </p>
+                            <p>
+                                <subs-button :active={{json_encode(!$thread->isSubscribedTo)}}></subs-button>
                             </p>
                         </div>
                     </div>

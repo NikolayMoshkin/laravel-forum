@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Notifications\ThreadWasUpdated;
 use Illuminate\Database\Eloquent\Model;
 
 class Thread extends Model
@@ -10,6 +11,7 @@ class Thread extends Model
 //    use UTCTimezone;
 
     protected $guarded = [];
+    protected $appends = ['isSubscribedTo']; //добавляет в коллекцию указанные поля
 
     protected $with = ['owner', 'channel'];  //аналог метода addGlobalScope
 
@@ -40,9 +42,18 @@ class Thread extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function addReply($reply)
+    public function addReply(array $reply)
     {
-        $this->replies()->create($reply);
+       $reply =  $this->replies()->create($reply);
+
+        //Prepare notifications for all subscribers.
+        $this->subscriptions
+            ->filter(function ($sub) use ($reply){
+                return $sub->user_id != $reply['user_id'];
+            })
+            ->each->notify($reply);
+
+        return $reply;
     }
 
     public function channel()
@@ -59,5 +70,35 @@ class Thread extends Model
     {
         return $filters->apply($query);
 
+    }
+
+    public function subscribe($userId = null)
+    {
+        $this->subscriptions()
+            ->create([
+           'user_id' => $userId ? $userId : auth()->id(),
+
+        ]);
+        return $this;
+    }
+
+    public function unsubscribe($userId = null)
+    {
+        $this->subscriptions()
+            ->where('user_id', $userId?:auth()->id())
+            ->delete();
+        return $this;
+    }
+
+    public function subscriptions()
+    {
+        return $this->hasMany(ThreadSubscription::class);
+    }
+
+    public function getIsSubscribedToAttribute()  //getFooAttribute - мутатор, позволяет обращаться к методу , как к полю (object->foo)
+    {
+        return $this->subscriptions()
+            ->where('user_id', auth()->id())
+            ->exists();
     }
 }

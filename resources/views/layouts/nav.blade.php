@@ -20,6 +20,7 @@
                     <div class="dropdown-menu dropdown-menu-left" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" href="/threads">Все посты</a>
                         <a class="dropdown-item" href="/threads?popular=1">Самые популярные</a>
+                        <a class="dropdown-item" href="/threads?unanswered=1">Посты без комментариев</a>
                         @if(auth()->check())
                             <a class="dropdown-item" href="/threads?by={{auth()->user()->name}}">Мои посты</a>
                         @endif
@@ -52,6 +53,11 @@
                         </li>
                     @endif
                 @else
+                    <li class="nav-item">
+                        <a class="nav-link">
+                            <user-notifications></user-notifications>
+                        </a>
+                    </li>
                     <li class="nav-item dropdown">
                         <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>

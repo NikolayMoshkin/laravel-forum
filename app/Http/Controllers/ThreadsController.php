@@ -83,8 +83,8 @@ class ThreadsController extends Controller
      */
     protected function getThreads(Channel $channel, ThreadFilters $filters)
     {
-        $threads = Thread::latest()->filter($filters);
 
+        $threads = Thread::latest()->filter($filters);
 //        dd($threads->toSql()); //показывает чистый sql запрос
 
         if ($channel->exists) {
