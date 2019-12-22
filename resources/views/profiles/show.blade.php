@@ -21,6 +21,10 @@
             @endforeach
             {{$threads->links()}}
         </div>
+
+        @foreach($activities as $activity)
+            <div>{{$activity->type}}</div>
+        @endforeach
     </div>
 
 @endsection

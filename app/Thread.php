@@ -6,9 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Thread extends Model
 {
+    use RecordsActivity;
+
     protected $guarded = [];
 
-    protected $with = ['owner' , 'channel'];  //аналог метода addGlobalScope
+    protected $with = ['owner', 'channel'];  //аналог метода addGlobalScope
 
     protected static function boot()
     {
@@ -22,17 +24,8 @@ class Thread extends Model
 //            $builder->with('owner');
 //        });
 
-        static::deleting(function ($thread){
+        static::deleting(function ($thread) {
             $thread->replies()->delete();
-        });
-
-        static::created(function ($thread){
-            Activity::create([
-                'user_id' => auth()->id(),
-                'type' => 'created_thread',
-                'subject_id' => $thread->id,
-                'subject_type' => 'App/Thread',
-            ]);
         });
     }
 
