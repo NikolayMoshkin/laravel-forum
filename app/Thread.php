@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Events\ThreadHasNewReply;
 use App\Notifications\ThreadWasUpdated;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,7 +12,7 @@ class Thread extends Model
 //    use UTCTimezone;
 
     protected $guarded = [];
-    protected $appends = ['isSubscribedTo']; //добавляет в коллекцию указанные поля
+    protected $appends = ['isSubscribedTo']; //всегда добавляет в коллекцию указанные поля
 
     protected $with = ['owner', 'channel'];  //аналог метода addGlobalScope
 
@@ -46,12 +47,7 @@ class Thread extends Model
     {
        $reply =  $this->replies()->create($reply);
 
-        //Prepare notifications for all subscribers.
-        $this->subscriptions
-            ->filter(function ($sub) use ($reply){
-                return $sub->user_id != $reply['user_id'];
-            })
-            ->each->notify($reply);
+        event(new ThreadHasNewReply($this, $reply));
 
         return $reply;
     }
@@ -100,5 +96,12 @@ class Thread extends Model
         return $this->subscriptions()
             ->where('user_id', auth()->id())
             ->exists();
+    }
+
+    public function hasUpdatesFor($user = null)
+    {
+        $user = $user ?: auth()->user();
+
+        return $user && $this->updated_at > cache($user->visitedThreadCacheKey($this));
     }
 }

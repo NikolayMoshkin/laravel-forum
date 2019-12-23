@@ -40,10 +40,12 @@ class ParticipateInForumTest extends TestCase
     /** @test */
     public function a_reply_requires_a_body()
     {
+        $this->withoutExceptionHandling();
         $this->actingAs(factory(User::class)->create());
+
+        $this->expectException(\Exception::class);
         $reply = factory(Reply::class)->make(['body'=>null]);
-        $this->post($this->thread->path().'/replies', $reply->toArray())
-            ->assertSessionHasErrors('body');
+        $this->post($this->thread->path().'/replies', $reply->toArray());
     }
 
     /** @test */
@@ -60,5 +62,36 @@ class ParticipateInForumTest extends TestCase
         $this->assertEquals(0, Reply::count());
         $this->assertEquals(0, Favourite::count());
         $this->assertDatabaseMissing('activities', ['subject_type' => 'App\Favourite']);
+    }
+
+    /** @test */
+    public function replies_that_contain_spam_may_not_be_created()
+    {
+        $this->actingAs(factory(User::class)->create());
+
+        $reply = factory(\App\Reply::class)->make(['body' => 'Это спам']);
+
+//        $this->expectException(\Exception::class);
+
+        $this->post($this->thread->path() . '/replies', $reply->toArray())
+            ->assertSessionHasErrors();
+    }
+
+    /** @test */
+    public function users_may_only_repy_a_maximum_of_once_per_minute()
+    {
+        $this->withoutExceptionHandling();
+        $this->actingAs(factory(User::class)->create());
+        $reply = factory(\App\Reply::class)->make([
+            'user_id' => auth()->id(),
+            'body' => 'Simple reply'
+        ]);
+
+        $this->post($this->thread->path() . '/replies', $reply->toArray())
+            ->assertRedirect();
+
+        $this->post($this->thread->path() . '/replies' , $reply->toArray())
+            ->assertSessionHasErrors();
+
     }
 }

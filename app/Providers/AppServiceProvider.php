@@ -6,6 +6,7 @@ use App\Channel;
 
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -39,5 +40,7 @@ class AppServiceProvider extends ServiceProvider
             $view->with('channels', $channels);
         });
 //        View::share('channels', Channel::all());  //аналог строчек выше
+
+        Validator::extend('spamfree', '\App\Rules\SpamFree@passes');  //связываем название пользователского фильтра и модель
     }
 }

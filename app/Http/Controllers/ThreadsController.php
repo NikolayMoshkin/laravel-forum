@@ -9,9 +9,12 @@ use App\Filters\ThreadFilters;
 use App\Reply;
 use App\User;
 use App\Thread;
+use App\Utilities\Inspections\Spam;
 use Carbon\Carbon;
+use http\Cookie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use kcfinder\session;
 
 class ThreadsController extends Controller
 {
@@ -36,6 +39,10 @@ class ThreadsController extends Controller
     public function show($channel_id, Thread $thread)
     {
 
+        if(auth()->check()){
+            auth()->user()->read($thread);
+        }
+
 //        $thread->load('replies.owner');
 //        return $thread->load('replies');
 //        return Thread::withCount('replies')->first();  //считает кол-во replies
@@ -48,8 +55,8 @@ class ThreadsController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'title' => 'required|min:2',
-            'body'  => 'required|min:2',
+            'title' => 'required|min:2|spamfree',
+            'body'  => 'required|min:2|spamfree',
             'channel_id' => 'required|exists:channels,id',
         ]);
 

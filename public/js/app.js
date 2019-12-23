@@ -1844,25 +1844,35 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['message'],
   data: function data() {
     return {
       body: '',
+      level: 'success',
       show: false
     };
   },
   created: function created() {
     var _this = this;
 
-    if (this.message) this.flash(this.message);
-    window.events.$on('flash', function (message) {
-      _this.flash(message);
+    if (this.message) {
+      this.flash({
+        message: this.message
+      });
+    }
+
+    window.events.$on('flash', function (data) {
+      _this.flash(data);
     });
   },
   methods: {
-    flash: function flash(message) {
-      this.body = message;
+    flash: function flash(data) {
+      console.log('flash starts: ' + data);
+      this.body = data.message;
+      this.level = data.level ? data.level : this.level;
       this.show = true;
       this.hide();
     },
@@ -1901,6 +1911,8 @@ __webpack_require__.r(__webpack_exports__);
         body: this.body
       }).then(function (response) {
         flash('Комментарий обновлен');
+      })["catch"](function (error) {
+        flash(error.response.data, 'danger');
       });
       this.editing = false;
     },
@@ -38074,16 +38086,14 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      directives: [
-        { name: "show", rawName: "v-show", value: _vm.show, expression: "show" }
-      ],
-      staticClass: "alert alert-success text-center alert-flash"
-    },
-    [_c("strong", [_vm._v("Success!")]), _vm._v(" " + _vm._s(_vm.body) + "\n")]
-  )
+  return _c("div", {
+    directives: [
+      { name: "show", rawName: "v-show", value: _vm.show, expression: "show" }
+    ],
+    staticClass: "alert text-center alert-flash",
+    class: "alert-" + _vm.level,
+    domProps: { textContent: _vm._s(_vm.body) }
+  })
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -50392,7 +50402,11 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 window.events = new Vue();
 
 window.flash = function (message) {
-  window.events.$emit('flash', message);
+  var level = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'success';
+  window.events.$emit('flash', {
+    message: message,
+    level: level
+  });
 };
 
 window.reduceRepliesCounter = function () {

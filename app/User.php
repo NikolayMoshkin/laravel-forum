@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -60,5 +61,24 @@ class User extends Authenticatable
     public function activities()
     {
         return $this->hasMany(Activity::class, 'user_id')->latest();
+    }
+
+    public function visitedThreadCacheKey(Thread $thread)
+    {
+        return sprintf("users.%s.visits.%s", $this->id, $thread->id);
+
+    }
+
+    public function read(Thread $thread)
+    {
+        cache()->forever(
+            $this->visitedThreadCacheKey($thread),
+            Carbon::now() //добавляем в кэш дату посещения страницы поста для обновления статуса просмотренных постов
+        );
+    }
+
+    public function lastReply()
+    {
+        return $this->hasOne(Reply::class)->latest();
     }
 }

@@ -34,6 +34,7 @@
 
     <main class="py-4">
         <flash message = '{{session('flash')}}'></flash>
+        @include('errors')
         @yield('content')
     </main>
 </div>

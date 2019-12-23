@@ -46,6 +46,7 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        //здесь можно писать свою логику обработки ошибок (55 урок)
         return parent::render($request, $exception);
     }
 }

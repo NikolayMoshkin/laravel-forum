@@ -10,7 +10,15 @@
                         @foreach($threads as $thread)
                             <div class="row">
                                 <div class="col-md-8">
-                                    <a href={{$thread->path()}}>{{$thread->title}}</a>
+                                    @if($thread->hasUpdatesFor())
+                                        <strong><a href={{$thread->path()}}>{{$thread->title}}</a>
+                                            <small style="color: rgba(249,17,0,0.63)"> обновлено</small>
+                                        </strong>
+
+                                    @else
+                                        <a href={{$thread->path()}}>{{$thread->title}}</a>
+                                    @endif
+
                                     <div>  {{$thread->body}}</div>
                                 </div>
                                 <div class="col-md-4 text-right">
