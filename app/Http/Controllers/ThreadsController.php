@@ -4,17 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Channel;
 
-use App\Favourite;
+
 use App\Filters\ThreadFilters;
-use App\Reply;
-use App\User;
 use App\Thread;
-use App\Utilities\Inspections\Spam;
-use Carbon\Carbon;
-use http\Cookie;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use kcfinder\session;
+
 
 class ThreadsController extends Controller
 {
@@ -38,7 +32,6 @@ class ThreadsController extends Controller
 
     public function show($channel_id, Thread $thread)
     {
-
         if(auth()->check()){
             auth()->user()->read($thread);
         }

@@ -8,13 +8,18 @@ use Illuminate\Contracts\Validation\Rule;
 class SpamFree implements Rule  //Добавляется через artisan make:rule SpamFree и в AppServiceProvider
 {
     /**
+     * @var Spam
+     */
+    protected $spam;
+
+    /**
      * Create a new rule instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Spam $spam)
     {
-        //
+        $this->spam = $spam;
     }
 
     /**
@@ -27,7 +32,7 @@ class SpamFree implements Rule  //Добавляется через artisan make
     public function passes($attribute, $value)
     {
         try {
-            return !app(Spam::class)->detect($value);
+            return !$this->spam->detect($value);
         } catch(\Exception $e){
             return false;
         }

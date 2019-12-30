@@ -98,7 +98,7 @@ class Thread extends Model
             ->exists();
     }
 
-    public function hasUpdatesFor($user = null)
+    public function hasUpdatesFor($user = null)  //этот метод используется во view файле (threads/index)
     {
         $user = $user ?: auth()->user();
 
