@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Channel;
 use App\Http\Forms\CreatePostForm;
+use App\Notifications\YouWereMentioned;
 use App\Reply;
 use App\Thread;
+use App\User;
 use App\Utilities\Inspections\Spam;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 
 class RepliesController extends Controller
 {
@@ -33,6 +34,7 @@ class RepliesController extends Controller
                 'body' => $request->body,
                 'user_id' => auth()->id(),
             ]);
+
             return back()->with('flash', 'Комментарий добавлен');
 
         } catch (\Exception $e) {

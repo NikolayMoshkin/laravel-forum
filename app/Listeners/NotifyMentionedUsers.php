@@ -3,10 +3,12 @@
 namespace App\Listeners;
 
 use App\Events\ThreadHasNewReply;
+use App\Notifications\YouWereMentioned;
+use App\User;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class NotifyThreadSubscribers
+class NotifyMentionedUsers
 {
     /**
      * Create the event listener.
@@ -26,10 +28,13 @@ class NotifyThreadSubscribers
      */
     public function handle(ThreadHasNewReply $event)
     {
-//        Prepare notifications for all subscribers.
-        $event->reply->thread->subscriptions
-            ->where('user_id', '!=', $event->reply->user_id)
-            ->each
-            ->notify($event->reply);
+        $mentionedUsers = $event->reply->mentionedUsers();
+
+        foreach ($mentionedUsers as $name){
+            $user = User::where('name', $name)->first();
+            if($user){
+                $user->notify(new YouWereMentioned($event->reply));
+            }
+        }
     }
 }

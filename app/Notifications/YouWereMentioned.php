@@ -7,23 +7,19 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class ThreadWasUpdated extends Notification
+class YouWereMentioned extends Notification
 {
     use Queueable;
 
-    protected $thread;
     protected $reply;
-
 
     /**
      * Create a new notification instance.
      *
-     * @param $thread
      * @param $reply
      */
-    public function __construct($thread, $reply)
+    public function __construct($reply)
     {
-        $this->thread = $thread;
         $this->reply = $reply;
     }
 
@@ -35,7 +31,7 @@ class ThreadWasUpdated extends Notification
      */
     public function via($notifiable)
     {
-        return ['database']; // или ['mail' , 'database']
+        return ['database'];
     }
 
     /**
@@ -61,7 +57,7 @@ class ThreadWasUpdated extends Notification
     public function toArray($notifiable)
     {
         return [
-            'message' => $this->reply->owner->name. ' оставил комментарий к посту ' . $this->reply->thread->title,
+            'message' => $this->reply->owner->name. ' упомянул вас в посте ' . $this->reply->thread->title,
             'link' => $this->reply->path(),
         ];
     }

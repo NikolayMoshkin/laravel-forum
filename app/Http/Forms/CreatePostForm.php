@@ -17,7 +17,8 @@ class CreatePostForm extends FormRequest
     {
 //        $this->authorize('create', Reply::class);
 //        Вместо authorize используем Gate:
-        return Gate::allows('create', Reply::class);
+        return Gate::allows('create', Reply::class);  //проверка на спам сообщениями
+//        return true;
     }
 
     /**

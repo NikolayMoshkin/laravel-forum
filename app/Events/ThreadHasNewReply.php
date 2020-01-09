@@ -8,25 +8,16 @@ class ThreadHasNewReply
 {
     use SerializesModels;
 
-    public $thread;
     public $reply;
 
     /**
      * Create a new event instance.
      *
-     * @param \App\Thread $thread
      * @param \App\Reply $reply
      */
-    public function __construct($thread, $reply)
+    public function __construct($reply)
     {
-        //
-        $this->thread = $thread;
         $this->reply = $reply;
     }
 
-    /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return \Illuminate\Broadcasting\Channel|array
-     */
 }

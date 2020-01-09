@@ -1968,7 +1968,7 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     subscribe: function subscribe() {
       var self = this;
-      axios[this.active ? 'delete' : 'post'](location.pathname + '/subscriptions').then(function () {
+      axios[this.active ? 'post' : 'delete'](location.pathname + '/subscriptions').then(function () {
         self.active = !self.active;
       });
     }

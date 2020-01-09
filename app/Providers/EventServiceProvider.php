@@ -17,6 +17,7 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         \App\Events\ThreadHasNewReply::class => [
             \App\Listeners\NotifyThreadSubscribers::class,
+            \App\Listeners\NotifyMentionedUsers::class,
         ],
         'App/Events/UserWasBanned' => [
             'App/Listeners/UserBannedNotification'
