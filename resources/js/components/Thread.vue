@@ -1,10 +1,26 @@
 <script>
+    import 'jquery.caret';
+    import 'at.js';
+
     export default {
         props: ['attributes'],
         data() {
             return {
 
             }
+        },
+        mounted(){
+            $('textarea').atwho({
+                at: "@",
+                delay: 500,
+                callbacks: {
+                    remoteFilter: function (query, callback) {
+                        $.getJSON("/api/users", {name: query}, function(usernames){
+                            callback(usernames)
+                        })
+                    }
+                }
+            })
         },
         methods: {
             deleteThread() {

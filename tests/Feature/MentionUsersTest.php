@@ -10,25 +10,37 @@ use Tests\TestCase;
 
 class MentionUsersTest extends TestCase
 {
-   use DatabaseMigrations;
+    use DatabaseMigrations;
 
-   /** @test */
-   public function mentioned_users_in_a_reply_are_notified()
-   {
-        $john = factory(User::class)->create(['name'=>'JohnDoe']);
+    /** @test */
+    public function mentioned_users_in_a_reply_are_notified()
+    {
+        $john = factory(User::class)->create(['name' => 'JohnDoe']);
         $this->actingAs($john);
 
-        $jane = factory(User::class)->create(['name'=>'JaneDoe']);
+        $jane = factory(User::class)->create(['name' => 'JaneDoe']);
 
         $thread = factory(Thread::class)->create();
 
         $reply = factory(Reply::class)->make([
-            'body'=>'@JaneDoe look at this. Also @FrankDoe.'
+            'body' => '@JaneDoe look at this. Also @FrankDoe.'
         ]);
 
-        $this->json('post', $thread->path().'/replies', $reply->toArray());
+        $this->json('post', $thread->path() . '/replies', $reply->toArray());
 
         $this->assertCount(1, $jane->notifications);
 
-   }
+    }
+
+    /** @test */
+    public function it_can_fetch_all_mentioned_users_including_given_characters()
+    {
+        factory(User::class)->create(['name'=> 'JohnDoe']);
+        factory(User::class)->create(['name'=> 'JaneDoe']);
+        factory(User::class)->create(['name'=> 'JasonMraz']);
+
+        $response = $this->json('GET', '/api/users', ['name' => 'doe'])->json();
+
+        $this->assertCount(2, $response);
+    }
 }

@@ -14,11 +14,14 @@
                                         <strong><a href={{$thread->path()}}>{{$thread->title}}</a>
                                             <small style="color: rgba(249,17,0,0.63)"> обновлено</small>
                                         </strong>
-
                                     @else
                                         <a href={{$thread->path()}}>{{$thread->title}}</a>
                                     @endif
-
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            Автор: <a href="{{route('profile', $thread->owner->name)}}">{{$thread->owner->name}}</a>
+                                        </div>
+                                    </div>
                                     <div>  {{$thread->body}}</div>
                                 </div>
                                 <div class="col-md-4 text-right">
@@ -28,9 +31,13 @@
                             <hr>
                         @endforeach
                     </div>
-
                 </div>
+                <div class="mt-2">
+                    {{$threads->links()}}
+                </div>
+
             </div>
+
         </div>
 
     </div>

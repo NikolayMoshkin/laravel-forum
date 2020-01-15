@@ -13,6 +13,14 @@ try {
     require('bootstrap');
 } catch (e) {}
 
+
+Vue.prototype.authorize = function(handler){ //TODO:использование проверки авторизации в компонентах Vue, где handler - callback функция
+    let user = window.App.user;
+    return user ? handler(user): false;
+}
+
+
+
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
  * to our Laravel back-end. This library automatically handles sending the

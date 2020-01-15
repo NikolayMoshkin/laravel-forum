@@ -12,7 +12,7 @@ class Reply extends Model
     protected $guarded = [];
     protected $touches = ['thread']; //обновляет updated_at поле родительской модели через вызов метода и belongsTo
 
-    protected $with = ['owner', 'thread', 'favourites'];  //используем вместо метода boot. Подгружаем зависимости в одном sql запрос
+    protected $with = ['owner', 'favourites'];  //используем вместо метода boot. Подгружаем зависимости в одном sql запрос
 
     // полe $appends магическим образом позволяет вызвать методы модели с именем get_customMethodName_attribute (например getIsFavouritedAttribute)
     // и добавить результат выполнения метода в конце json ответа
@@ -41,7 +41,12 @@ class Reply extends Model
 
     public function mentionedUsers()
     {
-        preg_match_all('/@([\w]+)/', $this->body, $matches);
+        preg_match_all('/@([\w_-]+)/', $this->body, $matches);
         return $matches[1];
+    }
+
+    public function setBodyAttribute($body) //мутатор автоматически принимает значение аттрибута body в переменную $body
+    {
+        $this->attributes['body'] = preg_replace('/@([\w_-]+)/', '<a href="/profiles/$1">$0</a>', $body);
     }
 }

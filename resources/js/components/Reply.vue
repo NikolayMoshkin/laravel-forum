@@ -5,9 +5,17 @@
             return {
                 editing: false,
                 body: this.attributes.body,
+                oldBody: '',
             }
         },
+        created(){
+            this.oldBody = this.attributes.body;
+        },
         methods: {
+            cancel() {
+              this.editing = false;
+              this.body = this.oldBody;
+            },
             update() {
                 axios.patch('/replies/' + this.attributes.id, {
                     body: this.body
@@ -16,7 +24,8 @@
                         flash('Комментарий обновлен');
                     })
                     .catch(error => {
-                        flash(error.response.data, 'danger')
+                        this.body = this.oldBody;
+                        flash(error.response.data, 'danger');
                     });
                 this.editing = false;
             },

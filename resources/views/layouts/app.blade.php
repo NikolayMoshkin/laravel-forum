@@ -18,6 +18,7 @@
             ]) !!};
     </script>
 
+
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
@@ -26,6 +27,8 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/my.css') }}" rel="stylesheet">
+
+    @yield('header')
 </head>
 <body>
 <div id="app">
@@ -42,5 +45,5 @@
 </html>
 
 {{--@php--}}
-{{--    dd(DB::getQueryLog())--}}
+{{--    dump(Illuminate\Support\Facades\DB::getQueryLog())--}}
 {{--@endphp--}}

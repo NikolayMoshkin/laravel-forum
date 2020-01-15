@@ -27,7 +27,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'avatar_path'
     ];
 
     /**
@@ -80,5 +80,11 @@ class User extends Authenticatable
     public function lastReply()
     {
         return $this->hasOne(Reply::class)->latest();
+    }
+
+    public function avatar()
+    {
+        $avatar_path = $this->avatar_path ? : 'avatars/default.png'; //TODO:хороший метод отображения аватаров
+        return asset('storage/'.$avatar_path);
     }
 }

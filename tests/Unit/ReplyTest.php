@@ -32,4 +32,27 @@ class ReplyTest extends TestCase
         $reply->created_at = Carbon::now()->subMonth();
         $this->assertFalse($reply->wasJustPublished());
     }
+
+    /** @test */
+    public function it_can_detect_all_mentioned_users_in_the_body()
+    {
+        $reply = factory(Reply::class)->create([
+            'body' => '@JaneDoe wants to talk to @JohnDoe'
+        ]);
+
+        $this->assertEquals(['JaneDoe', 'JohnDoe'], $reply->mentionedUsers());
+    }
+
+    /** @test */
+    public function it_wraps_mentioned_usernames_in_the_body_within_anchor_tags()
+    {
+        $reply = new Reply([
+            'body' => 'Hello @Jane_Doe!'
+        ]);
+
+        $this->assertEquals(
+            'Hello <a href="/profiles/Jane_Doe">@Jane_Doe</a>!',
+            $reply->body
+        );
+    }
 }

@@ -11,6 +11,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        factory(\App\User::class)->create([
+            'name' =>'admin',
+            'email' => '1@m.ru',
+            'password' => bcrypt('12345678')
+        ]);
+
        $threads = factory(App\Thread::class, 20)->create();
        $threads->each(function($thread){
            factory(\App\Reply::class, 5)->create(['thread_id'=>$thread->id]);

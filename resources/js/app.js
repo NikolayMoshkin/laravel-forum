@@ -23,9 +23,13 @@ require('./bootstrap');
 
 Vue.component('flash', require('./components/Flash.vue').default);
 Vue.component('reply', require('./components/Reply.vue').default);
+
+Vue.component('avatar-form', require('./components/AvatarForm.vue').default);
+
 Vue.component('thread', require('./components/Thread.vue').default);
 Vue.component('thread-info', require('./components/ThreadInfo.vue').default);
 Vue.component('user-notifications', require('./components/UserNotifications.vue').default);
+
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

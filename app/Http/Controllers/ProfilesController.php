@@ -8,12 +8,11 @@ use Illuminate\Http\Request;
 
 class ProfilesController extends Controller
 {
-    public function show(User $user)
+    public function show(User $profileUser)
     {
-        $activities = Activity::feed($user);
+        $activities = Activity::feed($profileUser);
 
-//        dd($activities);
-        return view('profiles.show', compact('user', 'activities'));
+        return view('profiles.show', compact('profileUser', 'activities'));
     }
 
 }

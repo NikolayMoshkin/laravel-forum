@@ -14,7 +14,8 @@
                     @endcan
                     <strong class="likes-count">{{$reply->favourites_count}}</strong>
                     <a class="{{$reply->isFavourited()? 'blue':'grey'}}" href="#">
-                        <i class="fa fa-thumbs-up mark-favourite" @click="favourite" aria-hidden="true" data-user-id='{{$reply->owner->id}}' data-reply-id='{{$reply->id}}'></i>
+                        <i class="fa fa-thumbs-up mark-favourite" @click="favourite" aria-hidden="true"
+                           data-user-id='{{$reply->owner->id}}' data-reply-id='{{$reply->id}}'></i>
                     </a>
                 </div>
             </div>
@@ -22,14 +23,15 @@
         </div>
         <div class="card-body">
             <div v-if="editing">
-                <div class="form-group">
-                    <textarea class='form-control' v-model="body"></textarea>
-                </div>
-                <button class="btn btn-xs btn-primary" @click="update">Обновить</button>
-                <button class="btn btn-xs btn-link" @click="editing = false">Отмена</button>
-
+                <form @submit="update">
+                    <div class="form-group">
+                        <textarea class='form-control' v-model="body" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-xs btn-primary">Обновить</button>
+                    <button class="btn btn-xs btn-link" @click="cancel">Отмена</button>
+                </form>
             </div>
-            <div v-else v-text="body">
+            <div v-else v-html="body">
             </div>
 
         </div>
