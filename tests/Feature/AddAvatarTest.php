@@ -35,13 +35,13 @@ class AddAvatarTest extends TestCase
     {
         $this->actingAs(factory(User::class)->create());
 
-        Storage::fake('public'); //TODO: имитируем в Storage папку public, сама очищается всякий раз
+        Storage::fake('public'); //TODO: имитируем в Storage папку public, папка сама очищается всякий раз
 
         $this->json('POST', "api/users/".auth()->id()."/avatar",[
             'avatar' => $file = UploadedFile::fake()->image('avatar.jpg') //TODO: имитируем фейковое изображение
         ]);
 
-        $this->assertEquals('avatars/' . $file->hashName(), auth()->user()->avatar_path);
+        $this->assertEquals( asset('storage/avatars/' . $file->hashName()), auth()->user()->avatar_path);
 
         Storage::disk('public')->assertExists('avatars/'.$file->hashName()); //TODO: получаем hash имя файла
     }

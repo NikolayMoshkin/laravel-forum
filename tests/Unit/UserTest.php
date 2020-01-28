@@ -27,9 +27,9 @@ class UserTest extends TestCase
     public function a_user_can_determine_their_avatar_path()
     {
         $userWithAvatar = factory(User::class)->create(['avatar_path' => 'avatars/test.jpg']);
-        $this->assertEquals(asset('storage/avatars/test.jpg'), $userWithAvatar->avatar());
+        $this->assertEquals(asset('storage/avatars/test.jpg'), $userWithAvatar->avatar_path);
 
         $userWithoutAvatar = factory(User::class)->create();
-        $this->assertEquals(asset('storage/avatars/default.png'), $userWithoutAvatar->avatar());
+        $this->assertEquals(asset('storage/avatars/default.png'), $userWithoutAvatar->avatar_path);
     }
 }

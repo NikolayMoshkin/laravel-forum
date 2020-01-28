@@ -13,7 +13,7 @@
                         <div class="card-header">
                             <div class="row">
                                 <div class="col-md-10">
-                                    <img class="mr-2" src="{{$thread->owner->avatar()}}" alt="{{$thread->owner->name}}" height="30">
+                                    <img class="mr-2" src="{{$thread->owner->avatar_path}}" alt="{{$thread->owner->name}}" height="30">
                                     <a href="/profiles/{{$thread->owner->name}}">{{$thread->owner->name}}</a>
                                     <div>
                                         <strong>{{$thread->title}}</strong>

@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Channel;
-
-
 use App\Filters\ThreadFilters;
 use App\Thread;
+use App\Trending;
 use Illuminate\Http\Request;
 
 
@@ -18,7 +17,7 @@ class ThreadsController extends Controller
         $this->middleware('auth')->except('index', 'show');
     }
 
-    public function index(Channel $channel, ThreadFilters $filters)
+    public function index(Channel $channel, ThreadFilters $filters, Trending $trending)
     {
 
         $threads = $this->getThreads($channel, $filters);
@@ -27,10 +26,13 @@ class ThreadsController extends Controller
             return $threads;
         }
 
-        return view('threads.index', compact('threads'));
+        return view('threads.index', [
+            'threads' => $threads,
+            'trending' => $trending->get()
+        ]);
     }
 
-    public function show($channel_id, Thread $thread)
+    public function show($channel_id, Thread $thread, Trending $trending)
     {
         if(auth()->check()){
             auth()->user()->read($thread);
@@ -38,7 +40,10 @@ class ThreadsController extends Controller
 
 //        $thread->load('replies.owner');
 //        return $thread->load('replies');
-//        return Thread::withCount('replies')->first();  //считает кол-во replies
+//        return Thread::withCount('replies')->first();  //TODO:считает кол-во replies
+
+        $trending->push($thread);
+        $thread->recordVisit();
 
         $replies = $thread->replies()->paginate(15);
 

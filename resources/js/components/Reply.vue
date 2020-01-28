@@ -32,6 +32,8 @@
             favourite(event) {
                 let likeElement = event.target;
                 let replyId = likeElement.dataset.replyId;
+                console.log(event.target);
+                console.log(event.target.dataset);
                 axios.post('/replies/' + replyId + '/favourites')
                     .then(function (res) {
                         let menu = likeElement.closest('.reply-menu');

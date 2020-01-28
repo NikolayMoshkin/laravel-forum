@@ -82,9 +82,9 @@ class User extends Authenticatable
         return $this->hasOne(Reply::class)->latest();
     }
 
-    public function avatar()
+    public function getAvatarPathAttribute($avatar) //TODO:волшебный метод. Переписывает отображение поля avatar_path объекта User. Метод по-умолчанию принимает стандартное значение поля и переписывает его.
     {
-        $avatar_path = $this->avatar_path ? : 'avatars/default.png'; //TODO:хороший метод отображения аватаров
+        $avatar_path = $avatar ? : 'avatars/default.png';
         return asset('storage/'.$avatar_path);
     }
 }

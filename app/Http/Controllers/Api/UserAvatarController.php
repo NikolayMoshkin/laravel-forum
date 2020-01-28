@@ -17,6 +17,6 @@ class UserAvatarController extends Controller
             'avatar_path' => \request()->file('avatar')->store('avatars', 'public') //TODO: быстро сохранять файлы сразу с hash именем
         ]);
 
-        return back();
+        return response([], 204);
     }
 }

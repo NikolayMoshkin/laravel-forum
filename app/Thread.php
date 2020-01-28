@@ -8,11 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Thread extends Model
 {
-    use RecordsActivity;
+    use RecordsActivity, RecordsVisits;
 //    use UTCTimezone;
 
     protected $guarded = [];
-    protected $appends = ['isSubscribedTo']; //всегда добавляет в коллекцию указанные поля
+    protected $appends = ['isSubscribedTo']; //TODO:всегда добавляет в коллекцию указанные поля при отобржении модели в качестве JSON
 
     protected $with = ['owner', 'channel'];  //аналог метода addGlobalScope
 
@@ -65,7 +65,6 @@ class Thread extends Model
     public function scopeFilter($query, $filters)  //добавив "scope" к названию метода, можно работать с builder'ом ($query)
     {
         return $filters->apply($query);
-
     }
 
     public function subscribe($userId = null)
@@ -91,7 +90,7 @@ class Thread extends Model
         return $this->hasMany(ThreadSubscription::class);
     }
 
-    public function getIsSubscribedToAttribute()  //getFooAttribute - мутатор, позволяет обращаться к методу , как к полю (object->foo)
+    public function getIsSubscribedToAttribute()  //TODO:getFooAttribute - мутатор, позволяет обращаться к методу , как к полю (object->foo) при работе с моделью (но не с ее json представлением)
     {
         return $this->subscriptions()
             ->where('user_id', auth()->id())
@@ -104,4 +103,5 @@ class Thread extends Model
 
         return $user && $this->updated_at > cache($user->visitedThreadCacheKey($this));
     }
+
 }
