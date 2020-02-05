@@ -3,15 +3,13 @@
 namespace Tests\Feature;
 
 use App\Activity;
-use App\Channel;
-use App\Favourite;
+
 use App\Reply;
 use App\Thread;
 use App\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+
 
 class CreateThreadsTest extends TestCase
 {
@@ -21,14 +19,25 @@ class CreateThreadsTest extends TestCase
     /** @test */
     public function guest_may_not_create_thread()
     {
-        $this->withoutExceptionHandling();  //не рендерить страницу с обработчиком событий, а просто выдавать ошибку, если таковая имеется
-        $this->expectException('Illuminate\Auth\AuthenticationException'); // сравниваем ошибки (без строчки выше сранивать будет не с чем и тест не пройдет)
-        $this->post('/threads/', []);
+//        $this->withoutExceptionHandling();  //TODO:не рендерить страницу с обработчиком событий, а просто выдавать ошибку, если таковая имеется
+//        $this->expectException('Illuminate\Auth\AuthenticationException'); // сравниваем ошибки (без строчки выше сранивать будет не с чем и тест не пройдет)
+        $this->post('/threads/', [])
+            ->assertRedirect(route('verification.notice'));
 
     }
 
     /** @test */
-    public function an_authenticated_user_can_create_new_forum_thread()
+    public function authenticated_user_must_first_confirm_their_email_before_creating_threads()
+    {
+        $user = factory(User::class)->create(['email_verified_at' => null]);
+        $this->actingAs($user);
+        $thread = factory(Thread::class)->make();
+        $this->post('/threads/', $thread->toArray())
+            ->assertRedirect(route('verification.notice'));
+    }
+
+    /** @test */
+    public function a_user_can_create_new_forum_thread()
     {
         $this->actingAs(factory(User::class)->create());  //то же самое, что be()
 
@@ -68,19 +77,40 @@ class CreateThreadsTest extends TestCase
             ->assertSessionHasErrors('channel_id');
     }
 
+
+    /** @test */
+    public function a_thead_requires_a_unique_slug()
+    {
+        $this->withoutExceptionHandling();
+
+        $this->actingAs(factory(User::class)->create());
+
+        $thread = factory(Thread::class)->create([
+            'title' => 'Foo Title',
+            'slug' => 'foo-title'
+        ]);
+
+        $this->post(route('threads.store'), $thread->toArray());
+        $this->assertTrue(Thread::whereSlug('foo-title-2')->exists());
+
+        $this->post(route('threads.store'), $thread->toArray());
+        $this->assertTrue(Thread::whereSlug('foo-title-3')->exists());
+
+    }
     /** @test */
     public function a_guest_can_not_delete_threads()
     {
         $thread = factory(Thread::class)->create();
 
         $this->json('DELETE', $thread->path())
-            ->assertStatus(401);
+            ->assertStatus(403);
     }
 
     /** @test */
     public function a_thread_can_be_deleted_by_owner()
     {
         $this->actingAs(factory(User::class)->create());
+
         $thread = factory(Thread::class)->create(['user_id' => auth()->id()]);
         $reply = factory(Reply::class)->create(['thread_id' => $thread->id]);
 

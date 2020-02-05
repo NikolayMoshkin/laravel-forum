@@ -14,7 +14,7 @@ class ThreadsController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth')->except('index', 'show');
+        $this->middleware('verified')->except('index', 'show');
     }
 
     public function index(Channel $channel, ThreadFilters $filters, Trending $trending)
@@ -43,7 +43,7 @@ class ThreadsController extends Controller
 //        return Thread::withCount('replies')->first();  //TODO:считает кол-во replies
 
         $trending->push($thread);
-        $thread->recordVisit();
+        $thread->visits()->record();
 
         $replies = $thread->replies()->paginate(15);
 
@@ -60,9 +60,10 @@ class ThreadsController extends Controller
 
         $thread = Thread::create([
             'title' => $request->title,
-            'channel_id' =>$request->channel_id,
             'body'=>$request->body,
+            'channel_id' =>$request->channel_id,
             'user_id'=>auth()->id(),
+            'slug' => $request->title, //далее вызывается мутатор setSlugAttribute в модели
         ]);
 
         return redirect($thread->path())->with('flash', 'Заметка создана успешно!');

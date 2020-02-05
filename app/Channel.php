@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Channel extends Model
 {
-    public function getRouteKeyName() //для web файла. Использовать в качестве иденификатора не id, а slug
+    public function getRouteKeyName() //TODO:для web файла. Использовать в качестве идентификатора не id, а slug
     {
         return 'slug';
     }

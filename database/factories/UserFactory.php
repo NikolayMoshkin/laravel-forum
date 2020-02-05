@@ -25,3 +25,9 @@ $factory->define(User::class, function (Faker $faker) {
         'remember_token' => Str::random(10),
     ];
 });
+
+$factory->state(App\User::class, 'unconfirmed', function(){ //TODO: можно содавать особенные фабрики моделей factory()->states('unconfirmed')
+    return [
+        'email_verified_at' => null
+    ];
+});

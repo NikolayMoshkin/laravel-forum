@@ -10,7 +10,6 @@ trait Favouritable
     protected static function bootFavouritable()  //в трейт можно добавить статитческий метод bootTraitName и тогда этот метод добавиться в boot вызвашей трейт модели
     {
         if(auth()->guest()) return;
-
         static::deleting(function($model){
             $model->favourites->each->delete();
         });

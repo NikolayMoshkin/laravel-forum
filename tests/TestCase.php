@@ -11,7 +11,7 @@ abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
 
-    public function publishThread($override) //пользовательские методы для тестов можно добавлять здесь
+    public function publishThread($override) //TODO:пользовательские методы для тестов можно добавлять здесь
     {
         $this->actingAs(factory(User::class)->create());
         $thread = factory(Thread::class)->make($override);

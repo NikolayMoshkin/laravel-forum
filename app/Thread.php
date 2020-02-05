@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Thread extends Model
 {
-    use RecordsActivity, RecordsVisits;
+    use RecordsActivity;
 //    use UTCTimezone;
 
     protected $guarded = [];
@@ -31,6 +31,11 @@ class Thread extends Model
         static::deleting(function ($thread) {
             $thread->replies->each->delete();
         });
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
     }
 
     public function replies()
@@ -59,7 +64,7 @@ class Thread extends Model
 
     public function path()
     {
-        return "/threads/" . $this->channel->slug . "/" . $this->id;
+        return "/threads/" . $this->channel->slug . "/" . $this->slug;
     }
 
     public function scopeFilter($query, $filters)  //добавив "scope" к названию метода, можно работать с builder'ом ($query)
@@ -102,6 +107,24 @@ class Thread extends Model
         $user = $user ?: auth()->user();
 
         return $user && $this->updated_at > cache($user->visitedThreadCacheKey($this));
+    }
+
+    public function visits()
+    {
+        return new Visits($this);
+    }
+
+    public function setSlugAttribute($value) //TODO: стандартный мутатор. Перехватывает поле модели при его изменении
+    {
+        $slug = str_slug($value);
+        $original = $slug;
+        $count = 2;
+
+        while(static::whereSlug($slug)->exists()){
+            $slug = "{$original}-" . $count++;
+        }
+
+        $this->attributes['slug'] = $slug;
     }
 
 }

@@ -15,6 +15,10 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
+//        'Illuminate\Auth\Events\Verified' => [
+//            'App\Listeners\LogVerifiedUser',
+//        ], //TODO:можно добавить свой listner на подтвреждение email
+
         \App\Events\ThreadHasNewReply::class => [
             \App\Listeners\NotifyThreadSubscribers::class,
             \App\Listeners\NotifyMentionedUsers::class,

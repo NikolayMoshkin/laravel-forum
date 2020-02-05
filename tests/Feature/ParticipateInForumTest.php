@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Activity;
 use App\Favourite;
 use App\Reply;
 use App\Thread;
@@ -49,7 +50,7 @@ class ParticipateInForumTest extends TestCase
     }
 
     /** @test */
-    public function an_authenticated_user_can_delete_his_replies()
+    public function an_authenticated_user_can_delete_his_replies() //странно, но тест не проходит, если вносить изменения в slug модели Thread
     {
         $this->actingAs(factory(User::class)->create());
         $reply = factory(Reply::class)->create(['user_id' => auth()->id()]);

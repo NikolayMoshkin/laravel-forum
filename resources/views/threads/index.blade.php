@@ -35,7 +35,7 @@
                             </div>
                         </div>
                         <div class="card-footer text-muted">
-                            <span class="fa fa-eye"></span> {{$thread->visits()}}
+                            <span class="fa fa-eye"></span> {{$thread->visits()->count()}}
                         </div>
                     </div>
                 @endforeach
