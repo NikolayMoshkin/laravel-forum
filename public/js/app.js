@@ -3223,11 +3223,18 @@ __webpack_require__.r(__webpack_exports__);
     return {
       editing: false,
       body: this.attributes.body,
-      oldBody: ''
+      oldBody: '',
+      isBest: false
     };
   },
   created: function created() {
+    var _this = this;
+
+    this.isBest = this.attributes.isBest;
     this.oldBody = this.attributes.body;
+    window.events.$on('best-reply-selected', function (id) {
+      _this.isBest = id === _this.attributes.id ? true : false;
+    });
   },
   methods: {
     cancel: function cancel() {
@@ -3235,14 +3242,14 @@ __webpack_require__.r(__webpack_exports__);
       this.body = this.oldBody;
     },
     update: function update() {
-      var _this = this;
+      var _this2 = this;
 
       axios.patch('/replies/' + this.attributes.id, {
         body: this.body
       }).then(function (response) {
         flash('Комментарий обновлен');
       })["catch"](function (error) {
-        _this.body = _this.oldBody;
+        _this2.body = _this2.oldBody;
         flash(error.response.data, 'danger');
       });
       this.editing = false;
@@ -3271,6 +3278,11 @@ __webpack_require__.r(__webpack_exports__);
           window.reduceRepliesCounter();
         });
       }
+    },
+    toggleBestReply: function toggleBestReply() {
+      axios.post('/replies/' + this.attributes.id + '/best').then(function (response) {
+        window.events.$emit('best-reply-selected', response.data);
+      });
     }
   }
 });

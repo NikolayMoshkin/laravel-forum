@@ -20,6 +20,12 @@ class ThreadPolicy
         //
     }
 
+    public function update(User $user, Thread $thread)
+    {
+        return auth()->id() === $thread->owner->id;
+    }
+
+
     public function delete(User $user, Thread $thread)
     {
         return auth()->id() === $thread->owner->id;

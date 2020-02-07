@@ -20,6 +20,7 @@ class CreateThreadsTable extends Migration
             $table->unsignedBigInteger('channel_id');
             $table->string('title');
             $table->text('body');
+            $table->unsignedInteger('best_reply_id')->nullable();
             $table->timestamps();
         });
     }

@@ -7,6 +7,7 @@ use App\Channel;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -30,6 +31,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+
+//        Redis::flushDB();  TODO: очистить базу данных Redis
+
         DB::connection()->enableQueryLog(); //TODO: включаем логирование запросов, затем в виде можно использовать: dd(Illuminate\Support\Facades\DB::getQueryLog())
 
         date_default_timezone_set('Europe/Moscow');

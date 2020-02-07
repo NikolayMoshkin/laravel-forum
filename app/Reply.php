@@ -13,7 +13,7 @@ class Reply extends Model
     protected $touches = ['thread']; //обновляет updated_at поле родительской модели через вызов метода и belongsTo
 
     protected $with = ['owner', 'favourites'];  //используем вместо метода boot. Подгружаем зависимости в одном sql запрос
-
+    protected $appends = ['isBest'];
     // полe $appends магическим образом позволяет вызвать методы модели с именем get_customMethodName_attribute (например getIsFavouritedAttribute)
     // и добавить результат выполнения метода в конце json ответа
 //    protected $appends = ['isFavourited'];
@@ -48,5 +48,15 @@ class Reply extends Model
     public function setBodyAttribute($body) //мутатор автоматически принимает значение аттрибута body в переменную $body
     {
         $this->attributes['body'] = preg_replace('/@([\w_-]+)/', '<a href="/profiles/$1">$0</a>', $body);
+    }
+
+    public function isBest()
+    {
+        return $this->thread->best_reply_id == $this->id;
+    }
+
+    public function getIsBestAttribute()
+    {
+        return $this->isBest();
     }
 }

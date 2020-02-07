@@ -6,10 +6,15 @@
                 editing: false,
                 body: this.attributes.body,
                 oldBody: '',
+                isBest: false
             }
         },
         created(){
+            this.isBest = this.attributes.isBest;
             this.oldBody = this.attributes.body;
+            window.events.$on('best-reply-selected', id => {
+                this.isBest = (id === this.attributes.id) ? true : false;
+            });
         },
         methods: {
             cancel() {
@@ -54,6 +59,13 @@
                             window.reduceRepliesCounter();
                         })
                 }
+            },
+           toggleBestReply(){
+                axios.post('/replies/' + this.attributes.id + '/best')
+                    .then(function (response) {
+                        window.events.$emit('best-reply-selected', response.data);
+                    });
+
             }
         }
     }

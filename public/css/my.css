@@ -15,3 +15,12 @@
     cursor: pointer;
     color: cornflowerblue !important;
 }
+
+.fa-star:hover{
+    cursor: pointer;
+    color: #d3ca1a !important;
+}
+
+.fa-star.active{
+    color: #d3ca1a !important;
+}

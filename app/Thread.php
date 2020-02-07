@@ -127,4 +127,19 @@ class Thread extends Model
         $this->attributes['slug'] = $slug;
     }
 
+    /**
+     * @param Reply $reply
+     */
+    public function toggleBestReply(Reply $reply)
+    {
+        if ($reply->thread->best_reply_id != $reply->id){
+            $reply->thread->update(['best_reply_id' => $reply->id]);
+            return $reply->id;
+        }
+        else {
+            $reply->thread->update(['best_reply_id' => null]);
+            return null;
+        }
+    }
+
 }

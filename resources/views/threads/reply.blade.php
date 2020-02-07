@@ -1,11 +1,15 @@
 <reply :attributes="{{$reply}}" inline-template>
-    <div id='reply-{{$reply->id}}' class="card" style="margin-top: 1em">
+    <div id='reply-{{$reply->id}}' class="card" :class="isBest ? 'border-success' : ''" style="margin-top: 1em">
         <div class="card-header">
             <div class="row">
                 <div class="col-md-8"><a href="/profiles/{{$reply->owner->name}}">{{$reply->owner->name}}</a>
                     ответил {{$reply->created_at->diffForHumans()}}:
                 </div>
                 <div class=" col-md-4 text-right reply-menu">
+                    @can('update', $thread)
+                    <i class="mr-3 fa fa-star text-muted" :class="isBest ? 'active' : ''" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="Лучший ответ"
+                       data-reply-id='{{$reply->id}}' @click="toggleBestReply"></i>
+                    @endcan
                     @can('update', $reply)
                         <i class="mr-3 fa fa-pencil text-muted update-reply" aria-hidden="true" @click="editing=true"
                            data-reply-id='{{$reply->id}}'></i>

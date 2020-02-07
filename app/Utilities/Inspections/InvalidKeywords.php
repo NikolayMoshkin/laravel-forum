@@ -19,7 +19,8 @@ class InvalidKeywords implements InspectionInterface
     public function detect($body)
     {
         foreach ($this->keywords as $keyword){
-            if(stripos($body, $keyword) !== false){
+            $regexp = "/$keyword/iu"; //TODO:regexp кириллицей - модификатор u
+            if(preg_match($regexp, $body)){
                 throw new Exception('Ваш ответ содержит спам.');
             }
         }
