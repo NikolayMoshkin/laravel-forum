@@ -32,7 +32,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
 
-//        Redis::flushDB();  TODO: очистить базу данных Redis
+//        Redis::flushDB(); // TODO: очистить базу данных Redis
+//        Cache::flush(); //TODO: очистить кэш laravel
 
         DB::connection()->enableQueryLog(); //TODO: включаем логирование запросов, затем в виде можно использовать: dd(Illuminate\Support\Facades\DB::getQueryLog())
 

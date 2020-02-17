@@ -6,11 +6,10 @@
                 editing: false,
                 body: this.attributes.body,
                 oldBody: '',
-                isBest: false
+                isBest: this.attributes.isBest
             }
         },
         created(){
-            this.isBest = this.attributes.isBest;
             this.oldBody = this.attributes.body;
             window.events.$on('best-reply-selected', id => {
                 this.isBest = (id === this.attributes.id) ? true : false;
@@ -35,17 +34,22 @@
                 this.editing = false;
             },
             favourite(event) {
-                let likeElement = event.target;
-                let replyId = likeElement.dataset.replyId;
-                console.log(event.target);
-                console.log(event.target.dataset);
-                axios.post('/replies/' + replyId + '/favourites')
-                    .then(function (res) {
-                        let menu = likeElement.closest('.reply-menu');
-                        menu.querySelector('.likes-count').innerText = res.data;
-                        let thumbsUpElem = menu.querySelector('a');
-                        thumbsUpElem.className = thumbsUpElem.className === 'grey' ? 'blue' : 'grey';
-                    })
+                if (window.App.user) {
+                    let likeElement = event.target;
+                    let replyId = likeElement.dataset.replyId;
+                    console.log(event.target);
+                    console.log(event.target.dataset);
+                    axios.post('/replies/' + replyId + '/favourites')
+                        .then(function (res) {
+                            let menu = likeElement.closest('.reply-menu');
+                            menu.querySelector('.likes-count').innerText = res.data;
+                            let thumbsUpElem = menu.querySelector('a');
+                            thumbsUpElem.className = thumbsUpElem.className === 'grey' ? 'blue' : 'grey';
+                        })
+                }
+                else {
+                    flash('Вы не авторизованы', 'danger');
+                }
             },
             deleteReply(event) {
                 let confirmDelete = confirm("Удалить ответ?");

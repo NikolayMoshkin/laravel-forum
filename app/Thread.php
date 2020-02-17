@@ -24,7 +24,7 @@ class Thread extends Model
             $builder->withCount('replies');
         });
 
-//        static::addGlobalScope('owner', function ($builder) {  //при использовании далее метода withoutGlobalScopes  - не будут загружаться GlobalScopes
+//        static::addGlobalScope('owner', function ($builder) {  //TODO: при использовании далее метода withoutGlobalScopes  - не будут загружаться GlobalScopes
 //            $builder->with('owner');
 //        });
 
@@ -127,9 +127,6 @@ class Thread extends Model
         $this->attributes['slug'] = $slug;
     }
 
-    /**
-     * @param Reply $reply
-     */
     public function toggleBestReply(Reply $reply)
     {
         if ($reply->thread->best_reply_id != $reply->id){
@@ -140,6 +137,11 @@ class Thread extends Model
             $reply->thread->update(['best_reply_id' => null]);
             return null;
         }
+    }
+
+    public function lock()
+    {
+        $this->update(['locked' => true]);
     }
 
 }

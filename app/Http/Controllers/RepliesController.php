@@ -24,11 +24,14 @@ class RepliesController extends Controller
      * @param Thread $thread
      * @param Request $request
      * @param Spam $spam
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|void
+     * @return \Illuminate\Http\RedirectResponse
      */
 
     public function store(Channel $channel, Thread $thread, Request $request, CreatePostForm $form)
     {
+        if ($thread->locked){
+            return response('Thread is locked', 422);
+        }
         try{
             $thread->addReply([
                 'body' => $request->body,

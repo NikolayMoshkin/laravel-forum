@@ -3224,13 +3224,12 @@ __webpack_require__.r(__webpack_exports__);
       editing: false,
       body: this.attributes.body,
       oldBody: '',
-      isBest: false
+      isBest: this.attributes.isBest
     };
   },
   created: function created() {
     var _this = this;
 
-    this.isBest = this.attributes.isBest;
     this.oldBody = this.attributes.body;
     window.events.$on('best-reply-selected', function (id) {
       _this.isBest = id === _this.attributes.id ? true : false;
@@ -3255,16 +3254,20 @@ __webpack_require__.r(__webpack_exports__);
       this.editing = false;
     },
     favourite: function favourite(event) {
-      var likeElement = event.target;
-      var replyId = likeElement.dataset.replyId;
-      console.log(event.target);
-      console.log(event.target.dataset);
-      axios.post('/replies/' + replyId + '/favourites').then(function (res) {
-        var menu = likeElement.closest('.reply-menu');
-        menu.querySelector('.likes-count').innerText = res.data;
-        var thumbsUpElem = menu.querySelector('a');
-        thumbsUpElem.className = thumbsUpElem.className === 'grey' ? 'blue' : 'grey';
-      });
+      if (window.App.user) {
+        var likeElement = event.target;
+        var replyId = likeElement.dataset.replyId;
+        console.log(event.target);
+        console.log(event.target.dataset);
+        axios.post('/replies/' + replyId + '/favourites').then(function (res) {
+          var menu = likeElement.closest('.reply-menu');
+          menu.querySelector('.likes-count').innerText = res.data;
+          var thumbsUpElem = menu.querySelector('a');
+          thumbsUpElem.className = thumbsUpElem.className === 'grey' ? 'blue' : 'grey';
+        });
+      } else {
+        flash('Вы не авторизованы', 'danger');
+      }
     },
     deleteReply: function deleteReply(event) {
       var confirmDelete = confirm("Удалить ответ?");
@@ -7909,7 +7912,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.alert-flash {\n    position: fixed;\n    right: 2em;\n    bottom: 2em;\n}\n", ""]);
+exports.push([module.i, "\n.alert-flash {\n    position: fixed;\n    right: 2em;\n    bottom: 2em;\n    z-index: 10;\n}\n", ""]);
 
 // exports
 

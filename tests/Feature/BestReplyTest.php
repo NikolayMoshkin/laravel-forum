@@ -56,4 +56,20 @@ class BestReplyTest extends TestCase
 
     }
 
+    /** @test */
+    public function if_a_best_reply_is_deleted_then_the_thread_is_properly_updated_to_reflect_that()
+    {
+
+        $this->actingAs(factory(User::class)->create());
+
+        $reply = factory(Reply::class)->create(['user_id'=>auth()->id()]);
+
+        $reply->thread->toggleBestReply($reply);
+
+        $this->deleteJson(route('replies.destroy', $reply->id)); //TODO:Laravel automatically fetch the primary key of eloquent model and put in route-model binding
+
+        $this->assertNull($reply->thread->fresh()->best_reply_id);
+
+    }
+
 }

@@ -19,6 +19,14 @@ class Reply extends Model
 //    protected $appends = ['isFavourited'];
 
 
+//    protected static function boot()
+//    {
+//        parent::boot();
+//        static::deleting(function($model){
+//            $model->thread->update(['best_reply_id' => null]);  //реализовано через database onDelete
+//        });
+//    }
+
     public function owner()
     {
         return $this->belongsTo(User::class, 'user_id');

@@ -27,13 +27,14 @@ Route::get('threads/create', 'ThreadsController@create'); //порядок ма�
 Route::get('/threads/{channel}', 'ThreadsController@index');
 
 Route::get('/threads/{channel}/{thread}', 'ThreadsController@show');
+Route::patch('/threads/{channel}/{thread}', 'ThreadsController@update')->name('threads.update');
 Route::delete('/threads/{channel}/{thread}', 'ThreadsController@destroy');
 
 Route::post('/threads', 'ThreadsController@store')->name('threads.store');;
 
 Route::post('/threads/{channel}/{thread}/replies', 'RepliesController@store');
 
-Route::delete('/replies/{reply}', 'RepliesController@destroy');
+Route::delete('/replies/{reply}', 'RepliesController@destroy')->name('replies.destroy');
 Route::patch('/replies/{reply}', 'RepliesController@update');
 
 Route::post('/replies/{reply}/best', 'BestRepliesController@store')->name('best-replies.store');

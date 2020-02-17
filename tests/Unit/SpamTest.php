@@ -21,7 +21,7 @@ class SpamTest extends TestCase
 
         $this->expectException('Exception');
 
-        $spam->detect('купите наш товар!');
+        $spam->detect('иди сюда, Тварь!');
     }
 
     /** @test */

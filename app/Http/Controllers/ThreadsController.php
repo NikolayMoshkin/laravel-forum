@@ -50,6 +50,16 @@ class ThreadsController extends Controller
         return view('threads.show', compact('thread', 'replies'));
     }
 
+    public function update($channel, Thread $thread)
+    {
+        if(\request()->has('locked')){
+            if(! auth()->user()->isAdmin()){
+                return response('', 403);
+            }
+            $thread->lock();
+        }
+    }
+
     public function store(Request $request)
     {
         $this->validate($request, [
@@ -91,7 +101,7 @@ class ThreadsController extends Controller
     {
 
         $threads = Thread::latest()->filter($filters);
-//        dd($threads->toSql()); //показывает чистый sql запрос
+//        dd($threads->toSql()); //TODO: показывает чистый sql запрос
 
         if ($channel->exists) {
             $threads->where('channel_id', $channel->id);

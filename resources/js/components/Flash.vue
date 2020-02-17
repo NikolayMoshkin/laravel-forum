@@ -49,5 +49,6 @@
         position: fixed;
         right: 2em;
         bottom: 2em;
+        z-index: 10;
     }
 </style>
