@@ -6,6 +6,7 @@ use App\Channel;
 use App\Filters\ThreadFilters;
 use App\Thread;
 use App\Trending;
+use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Http\Request;
 
 
@@ -19,7 +20,6 @@ class ThreadsController extends Controller
 
     public function index(Channel $channel, ThreadFilters $filters, Trending $trending)
     {
-
         $threads = $this->getThreads($channel, $filters);
 
         if(request()->wantsJson()){
@@ -48,16 +48,6 @@ class ThreadsController extends Controller
         $replies = $thread->replies()->paginate(15);
 
         return view('threads.show', compact('thread', 'replies'));
-    }
-
-    public function update($channel, Thread $thread)
-    {
-        if(\request()->has('locked')){
-            if(! auth()->user()->isAdmin()){
-                return response('', 403);
-            }
-            $thread->lock();
-        }
     }
 
     public function store(Request $request)

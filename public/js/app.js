@@ -3405,7 +3405,11 @@ __webpack_require__.r(__webpack_exports__);
       _this.repliesCount--;
     });
   },
-  methods: {}
+  methods: {
+    threadLock: function threadLock() {
+      window.events.$emit('thread-lock', this.attributes.id);
+    }
+  }
 });
 
 /***/ }),

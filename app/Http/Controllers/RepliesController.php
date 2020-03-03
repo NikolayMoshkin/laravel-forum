@@ -10,6 +10,7 @@ use App\Thread;
 use App\User;
 use App\Utilities\Inspections\Spam;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class RepliesController extends Controller
 {
@@ -27,7 +28,7 @@ class RepliesController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
 
-    public function store(Channel $channel, Thread $thread, Request $request, CreatePostForm $form)
+    public function store(Channel $channel, Thread $thread, Request $request, CreatePostForm $form, Response $response)
     {
         if ($thread->locked){
             return response('Thread is locked', 422);

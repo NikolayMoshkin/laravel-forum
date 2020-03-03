@@ -13,7 +13,8 @@
                         <div class="card-header">
                             <div class="row">
                                 <div class="col-md-10">
-                                    <img class="mr-2" src="{{$thread->owner->avatar_path}}" alt="{{$thread->owner->name}}" height="30">
+                                    <img class="mr-2" src="{{$thread->owner->avatar_path}}"
+                                         alt="{{$thread->owner->name}}" height="30">
                                     <a href="/profiles/{{$thread->owner->name}}">{{$thread->owner->name}}</a>
                                     <div>
                                         <strong>{{$thread->title}}</strong>
@@ -72,9 +73,15 @@
                                     href="/profiles/{{$thread->owner->name}}">{{$thread->owner->name}}</a> {{$thread->created_at->diffForHumans()}}
                                 и на данный момент имеет <span v-text="repliesCount"></span> комментариев.
                             </p>
-                            <p>
-                                <subs-button :active={{json_encode(!$thread->isSubscribedTo)}}></subs-button>
-                            </p>
+                            @if(auth()->check())
+                                <p>
+                                    <subs-button :active={{json_encode(!$thread->isSubscribedTo)}}></subs-button>
+                                    @if(auth()->user()->isAdmin())
+                                        <button class="btn btn-outline-secondary" @click="threadLock">Закрыть
+                                        </button>
+                                    @endif
+                                </p>
+                            @endif
                         </div>
                     </div>
                 </thread-info>

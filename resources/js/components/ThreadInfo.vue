@@ -17,6 +17,9 @@
             });
         },
         methods:{
+            threadLock: function () {
+                window.events.$emit('thread-lock', this.attributes.id)
+            }
 
         }
 

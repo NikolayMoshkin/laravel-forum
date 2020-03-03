@@ -14,7 +14,8 @@
     <script src="{{ asset('js/my.js') }}" defer></script>
     <script>
         window.App = {!! json_encode([
-            'user' => auth()->user()
+            'user' => auth()->user(),
+            'admin' => auth()->user()? auth()->user()->isAdmin():false
             ]) !!};
     </script>
 
