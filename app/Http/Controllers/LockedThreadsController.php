@@ -9,6 +9,8 @@ class LockedThreadsController extends Controller
 {
     public function store(Thread $thread)
     {
-            $thread->lock();
+        $thread->toggleLock();
+
+        return $thread->fresh()->locked;
     }
 }

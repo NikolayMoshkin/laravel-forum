@@ -3343,7 +3343,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['attributes'],
   data: function data() {
-    return {};
+    return {
+      locked: false
+    };
+  },
+  created: function created() {
+    var _this = this;
+
+    this.locked = this.attributes.locked == 0 ? false : true;
+    window.events.$on('thread-lock-toggle', function (data) {
+      _this.toggleLock(data);
+    });
   },
   mounted: function mounted() {
     $('textarea').atwho({
@@ -3370,6 +3380,9 @@ __webpack_require__.r(__webpack_exports__);
           window.location.replace('/threads');
         });
       }
+    },
+    toggleLock: function toggleLock(locked) {
+      this.locked = locked == 0 ? false : true;
     }
   }
 });
@@ -3394,20 +3407,27 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      repliesCount: this.attributes.replies_count
+      repliesCount: this.attributes.replies_count,
+      lockBtnText: ''
     };
   },
   created: function created() {
     var _this = this;
 
+    this.lockBtnText = this.attributes.locked == 0 ? 'Закрыть' : 'Открыть';
     window.events.$on('reduceRepliesCounter', function () {
       console.log('reduceRepliesCounter starts, ' + _this.repliesCount);
       _this.repliesCount--;
     });
+    window.events.$on('thread-lock-toggle', function (locked) {
+      _this.lockBtnText = locked == 0 ? 'Закрыть' : 'Открыть';
+    });
   },
   methods: {
-    threadLock: function threadLock() {
-      window.events.$emit('thread-lock', this.attributes.id);
+    threadLockToggle: function threadLockToggle() {
+      axios.post('/locked-thread/' + this.attributes.slug).then(function (response) {
+        window.events.$emit('thread-lock-toggle', response.data);
+      });
     }
   }
 });

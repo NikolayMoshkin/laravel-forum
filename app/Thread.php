@@ -139,9 +139,9 @@ class Thread extends Model
         }
     }
 
-    public function lock()
+    public function toggleLock()
     {
-        $this->update(['locked' => true]);
+        $this->locked == 0 ? $this->update(['locked' => true]) : $this->update(['locked' => false]);
     }
 
 }

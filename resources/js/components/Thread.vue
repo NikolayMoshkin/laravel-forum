@@ -6,8 +6,14 @@
         props: ['attributes'],
         data() {
             return {
-
+                locked: false,
             }
+        },
+        created() {
+            this.locked = this.attributes.locked == 0 ? false: true;
+            window.events.$on('thread-lock-toggle', data => {
+                this.toggleLock(data);
+            });
         },
         mounted(){
             $('textarea').atwho({
@@ -32,6 +38,10 @@
                             window.location.replace('/threads');
                         })
                 }
+            },
+
+            toggleLock(locked){
+                this.locked = locked == 0 ? false: true;
             }
         }
     }
